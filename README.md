@@ -11,6 +11,12 @@ This repository contains all files for localstack practice with aws and terrafor
 
 ## Configuration
 
+Iniciar localstack
+
+```sh
+docker run -dp 4566:4566 localstack/localstack
+```
+
 first need configure your credencials for locastack to dont use the reals and have charges.
 
 ```sh
@@ -29,7 +35,7 @@ export AWS_PROFILE=local
 Add fake image of ec2 for localstack
 
 ```sh
-aws --endpoint-url=http://localhost:4566 ec2 register-image \
+aws --endpoint-url=http://localhost.localstack.cloud:4566 ec2 register-image \
     --name "debian-13-amd64-local-test" \
     --description "Imagen Fake de Debian para LocalStack" \
     --architecture x86_64 \
@@ -39,15 +45,6 @@ aws --endpoint-url=http://localhost:4566 ec2 register-image \
 ```
 
 List images of ec2
-
-```sh
-aws --endpoint-url=http://localhost:4566  ec2 describe-images  \
-  --filters "Name=name,Values=debian-13-amd64*" \
-  --query 'sort_by(Images, &CreationDate)[].Name' \
-  --region us-east-1
-```
-
-listar v2
 
 ```sh
 aws --endpoint-url=http://localhost.localstack.cloud:4566 ec2 describe-images \
@@ -73,38 +70,23 @@ To get all aws resources created - table view
 - Key-Pairs
 
 ```sh
-aws --endpoint-url=http://localhost:4566 ec2 describe-instances \
-    --region sa-east-1 \
+aws --endpoint-url=http://localhost.localstack.cloud:4566 ec2 describe-instances \
+    --region us-east-1\
     --query "Reservations[*].Instances[*].{ID:InstanceId,State:State.Name,PublicIP:PublicIpAddress,KeyName:KeyName}" \
     --output table
 
-aws --endpoint-url=http://localhost:4566 ec2 describe-security-groups \
-    --region sa-east-1 \
+aws --endpoint-url=http://localhost.localstack.cloud:4566 ec2 describe-security-groups \
+    --region us-east-1\
     --query "SecurityGroups[*].{ID:GroupId,Name:GroupName,Description:Description}" \
     --output table
 
-aws --endpoint-url=http://localhost:4566 ec2 describe-addresses \
-    --region sa-east-1 \
+aws --endpoint-url=http://localhost.localstack.cloud:4566 ec2 describe-addresses \
+    --region us-east-1\
     --query "Addresses[*].{PublicIP:PublicIp,InstanceID:InstanceId,AllocID:AllocationId}" \
     --output table
 
-aws --endpoint-url=http://localhost:4566 ec2 describe-key-pairs \
-    --region sa-east-1 \
+aws --endpoint-url=http://localhost.localstack.cloud:4566 ec2 describe-key-pairs \
+    --region us-east-1\
     --query "KeyPairs[*].{Name:KeyName,Fingerprint:KeyFingerprint}" \
     --output table
-```
-
-Inline view
-
-```sh
-aws --endpoint-url=http://localhost:4566 ec2 describe-instances --region sa-east-1
-aws --endpoint-url=http://localhost:4566 ec2 describe-security-groups --region sa-east-1
-aws --endpoint-url=http://localhost:4566 ec2 describe-addresses --region sa-east-1
-aws --endpoint-url=http://localhost:4566 ec2 describe-key-pairs --region sa-east-1
-```
-
-View in one table:
-
-```sh
-aws --endpoint-url=http://localhost:4566 ec2 describe-instances --query "Reservations[*].Instances[*].{ID:InstanceId,State:State.Name,PublicIP:PublicIpAddress}" --output table
 ```
