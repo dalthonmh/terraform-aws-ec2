@@ -2,6 +2,8 @@
 
 This repository contains all files for localstack practice with aws and terraform, the detailed is in Notion.so app.
 
+> Reference: KopiCloud in https://github.com/KopiCloud/terraform-aws-debian-ec2-instance
+
 ## Requeriments
 
 - Docker
@@ -9,15 +11,15 @@ This repository contains all files for localstack practice with aws and terrafor
 - Awscli
 - Terraform
 
-## Configuration
+## Configuration Localstack
 
-Iniciar localstack
+Start localstack
 
 ```sh
 docker run -dp 4566:4566 localstack/localstack
 ```
 
-first need configure your credencials for locastack to dont use the reals and have charges.
+First need configure your credencials for locastack to dont use the reals and have charges.
 
 ```sh
 aws configure --profile local
@@ -115,5 +117,5 @@ terraform destroy --auto-approve
 
 ```sh
 chmod 400 "todoapp-stage-linux-us-east-1.pem"
-ssh -i "todoapp-stage-linux-us-east-1.pem" admin@ec2-44-219-52-5.compute-1.amazonaws.com
+ssh -i "todoapp-stage-linux-us-east-1.pem" admin@domain.amazonaws.com
 ```
