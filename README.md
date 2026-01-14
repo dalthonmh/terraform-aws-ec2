@@ -22,6 +22,7 @@ first need configure your credencials for locastack to dont use the reals and ha
 ```sh
 aws configure --profile local
 aws configure list-profiles
+aws configure list
 ```
 
 > Complete with fake data.
@@ -29,7 +30,7 @@ aws configure list-profiles
 Use this local configuration (be carefull is only for terminal session)
 
 ```sh
-export AWS_PROFILE=local
+export AWS_PROFILE=default
 ```
 
 Add fake image of ec2 for localstack
@@ -89,4 +90,30 @@ aws --endpoint-url=http://localhost.localstack.cloud:4566 ec2 describe-key-pairs
     --region us-east-1\
     --query "KeyPairs[*].{Name:KeyName,Fingerprint:KeyFingerprint}" \
     --output table
+```
+
+## AWS
+
+First need ensurance the local profile
+
+```sh
+aws configure list
+```
+
+Execute the terraform comands
+
+```sh
+cd /environments/stage
+```
+
+```sh
+terraform init
+terraform plan -out=tfplan
+terraform apply tfplan
+terraform destroy --auto-approve
+```
+
+```sh
+chmod 400 "todoapp-stage-linux-us-east-1.pem"
+ssh -i "todoapp-stage-linux-us-east-1.pem" admin@ec2-44-219-52-5.compute-1.amazonaws.com
 ```
