@@ -1,6 +1,6 @@
 # Application Definition 
 app_name        = "todoapp"     # Do NOT enter any spaces
-app_environment = "stage"       # Dev, Test, Staging, Prod, etc
+app_environment = "localstack"  # Dev, Test, Staging, Prod, etc
 
 # Network
 vpc_cidr           = "10.11.0.0/16"
