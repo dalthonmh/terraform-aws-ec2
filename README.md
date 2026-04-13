@@ -24,7 +24,6 @@ First need configure your credencials for locastack to dont use the reals and ha
 ```sh
 aws configure --profile local
 aws configure list-profiles
-aws configure list
 ```
 
 > Complete with fake data.
@@ -32,7 +31,8 @@ aws configure list
 Use this local configuration (be carefull is only for terminal session)
 
 ```sh
-export AWS_PROFILE=default
+export AWS_PROFILE=local
+aws configure list
 ```
 
 Add fake image of ec2 for localstack
@@ -62,44 +62,54 @@ Execute the terraform comands
 terraform init
 terraform plan -out=tfplan
 terraform apply tfplan
-terraform destroy --auto-approve
 ```
 
 To get all aws resources created - table view
 
-- EC2 instances
-- Security groups
-- Elactic IP
-- Key-Pairs
-
 ```sh
+# EC2 instances
 aws --endpoint-url=http://localhost.localstack.cloud:4566 ec2 describe-instances \
     --region us-east-1\
     --query "Reservations[*].Instances[*].{ID:InstanceId,State:State.Name,PublicIP:PublicIpAddress,KeyName:KeyName}" \
     --output table
 
+# Security groups
 aws --endpoint-url=http://localhost.localstack.cloud:4566 ec2 describe-security-groups \
     --region us-east-1\
     --query "SecurityGroups[*].{ID:GroupId,Name:GroupName,Description:Description}" \
     --output table
 
+# Elactic IP
 aws --endpoint-url=http://localhost.localstack.cloud:4566 ec2 describe-addresses \
     --region us-east-1\
     --query "Addresses[*].{PublicIP:PublicIp,InstanceID:InstanceId,AllocID:AllocationId}" \
     --output table
 
+# Key-Pairs
 aws --endpoint-url=http://localhost.localstack.cloud:4566 ec2 describe-key-pairs \
     --region us-east-1\
     --query "KeyPairs[*].{Name:KeyName,Fingerprint:KeyFingerprint}" \
     --output table
 ```
 
-## AWS
+To destroy all
+
+```sh
+terraform destroy --auto-approve
+```
+
+## Levantar en AWS real
 
 First need ensurance the local profile
 
 ```sh
 aws configure list
+```
+
+Configuramos el profile de produccion
+
+```sh
+export AWS_PROFILE=production
 ```
 
 Execute the terraform comands
@@ -112,10 +122,26 @@ cd /environments/stage
 terraform init
 terraform plan -out=tfplan
 terraform apply tfplan
-terraform destroy --auto-approve
+
 ```
 
 ```sh
 chmod 400 "todoapp-stage-linux-us-east-1.pem"
-ssh -i "todoapp-stage-linux-us-east-1.pem" admin@domain.amazonaws.com
+ssh -i "todoapp-stage-linux-us-east-1.pem" admin@<domain.amazonaws.com>
+```
+
+Test nginx
+
+```sh
+curl localhost:81
+```
+
+Entrar mediante http con un navegador
+
+http://54.237.34.108:81
+
+To destroy all
+
+```sh
+terraform destroy --auto-approve
 ```
