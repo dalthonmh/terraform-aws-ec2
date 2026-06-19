@@ -6,7 +6,7 @@
 resource "aws_security_group" "aws-linux-sg" {
   name        = "${lower(var.app_name)}-${var.app_environment}-linux-sg"
   description = "Allow incoming HTTP connections"
-  vpc_id      = var.vpc_id
+  vpc_id      = aws_vpc.vpc.id
 
   ingress {
     from_port   = 80
@@ -45,7 +45,6 @@ resource "aws_security_group" "aws-linux-sg" {
   }
 }
 
-
 # Generates a secure private key and encodes it as PEM
 resource "tls_private_key" "key_pair" {
   algorithm = "ED25519"
@@ -53,7 +52,7 @@ resource "tls_private_key" "key_pair" {
 
 # Create the Key Pair
 resource "aws_key_pair" "key_pair" {
-  key_name   = "${lower(var.app_name)}-${lower(var.app_environment)}-linux-${lower(var.aws_region)}"  
+  key_name   = "${lower(var.app_name)}-${lower(var.app_environment)}-linux-${lower(var.aws_region)}"
   public_key = tls_private_key.key_pair.public_key_openssh
 }
 

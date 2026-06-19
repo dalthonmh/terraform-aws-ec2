@@ -121,8 +121,8 @@ cd /environments/stage
 
 ```sh
 terraform init
-terraform plan -out=tfplan
-terraform apply tfplan
+terraform plan -out=ec2-setup.binary
+terraform apply ec2-setup.binary
 
 ```
 

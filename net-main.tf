@@ -7,7 +7,7 @@ resource "aws_vpc" "vpc" {
   cidr_block           = var.vpc_cidr
   enable_dns_hostnames = true
   tags = {
-    Name = "${lower(var.app_name)}-${lower(var.app_environment)}-vpc"
+    Name        = "${lower(var.app_name)}-${lower(var.app_environment)}-vpc"
     Environment = var.app_environment
   }
 }
@@ -18,7 +18,7 @@ resource "aws_subnet" "public-subnet" {
   cidr_block        = var.public_subnet_cidr
   availability_zone = var.aws_az
   tags = {
-    Name = "${lower(var.app_name)}-${lower(var.app_environment)}-public-subnet"
+    Name        = "${lower(var.app_name)}-${lower(var.app_environment)}-public-subnet"
     Environment = var.app_environment
   }
 }
@@ -27,7 +27,7 @@ resource "aws_subnet" "public-subnet" {
 resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.vpc.id
   tags = {
-    Name = "${lower(var.app_name)}-${lower(var.app_environment)}-igw"
+    Name        = "${lower(var.app_name)}-${lower(var.app_environment)}-igw"
     Environment = var.app_environment
   }
 }
@@ -40,7 +40,7 @@ resource "aws_route_table" "public-rt" {
     gateway_id = aws_internet_gateway.gw.id
   }
   tags = {
-    Name = "${lower(var.app_name)}-${lower(var.app_environment)}-public-subnet-rt"
+    Name        = "${lower(var.app_name)}-${lower(var.app_environment)}-public-subnet-rt"
     Environment = var.app_environment
   }
 }

@@ -6,13 +6,13 @@
 resource "aws_instance" "linux-server" {
   ami                         = data.aws_ami.server_ami.id
   instance_type               = var.linux_instance_type
-  subnet_id                   = var.subnet_id
-  vpc_security_group_ids      = [var.security_group_id]
+  subnet_id                   = aws_subnet.public-subnet.id
+  vpc_security_group_ids      = [aws_security_group.aws-linux-sg.id]
   associate_public_ip_address = var.linux_associate_public_ip_address
   source_dest_check           = false
-  key_name                    = var.key_name
-  user_data                   = file("${path.module}/aws-user-data.sh")
-  
+  key_name                    = aws_key_pair.key_pair.key_name
+  user_data                   = file("${path.module}/ec2-user-data.sh")
+
   # root disk
   root_block_device {
     volume_size           = var.linux_root_volume_size
@@ -29,7 +29,7 @@ resource "aws_instance" "linux-server" {
     encrypted             = true
     delete_on_termination = true
   }
-  
+
   tags = {
     Name        = "${lower(var.app_name)}-${var.app_environment}-linux-server"
     Environment = var.app_environment

@@ -1,3 +1,7 @@
+##############################################
+## Stack Module - Shared Variables          ##
+##############################################
+
 variable "app_name" {
   type        = string
   description = "Application name"
@@ -9,12 +13,12 @@ variable "app_environment" {
 }
 
 variable "aws_region" {
-  type = string
+  type        = string
   description = "AWS region"
 }
 
-# Added vpc_id variable so Security Group knows where to be created
-variable "vpc_id" {
+variable "aws_az" {
   type        = string
-  description = "ID of the VPC where to create security group"
+  description = "AWS Availability Zone"
+  default     = "us-east-1a"
 }
