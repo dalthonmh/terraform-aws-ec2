@@ -59,6 +59,7 @@ aws --endpoint-url=http://localhost.localstack.cloud:4566 ec2 describe-images \
 Execute the terraform comands
 
 ```sh
+cd environments/localstack
 terraform init
 terraform plan -out=tfplan
 terraform apply tfplan
@@ -127,7 +128,7 @@ terraform apply tfplan
 
 ```sh
 chmod 400 "todoapp-stage-linux-us-east-1.pem"
-ssh -i "todoapp-stage-linux-us-east-1.pem" admin@<domain.amazonaws.com>
+ssh -i "todoapp-stage-linux-us-east-1.pem" admin@<ec2-ip.compute-1.amazonaws.com>
 ```
 
 Test nginx
