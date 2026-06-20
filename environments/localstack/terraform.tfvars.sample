@@ -10,6 +10,7 @@ public_subnet_cidr = "10.11.1.0/24"
 aws_access_key = "fake"
 aws_secret_key = "fake"
 aws_region     = "us-east-1"
+aws_az         = "us-east-1a"
 
 # AMI Selection
 ami_filter_name = "debian-13-amd64-local-test"

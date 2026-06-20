@@ -35,8 +35,8 @@ variable "aws_region" {
 
 variable "aws_az" {
   type        = string
-  description = "AWS Availability Zone"
-  default     = "us-east-1"
+  description = "AWS Availability Zone (e.g. us-east-1a, not the region)"
+  default     = "us-east-1a"
 }
 
 # ------------ Network Single AZ Public Only -----------
