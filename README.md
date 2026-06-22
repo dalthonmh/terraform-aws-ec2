@@ -1,25 +1,25 @@
 # terraform-aws-ec2
 
-This repository contains all files for localstack practice with aws and terraform, the detailed is in Notion.so app.
+This repository contains all files for practicing LocalStack with AWS and Terraform. The detailed documentation is in the Notion.so app.
 
-> Reference: KopiCloud in https://github.com/KopiCloud/terraform-aws-debian-ec2-instance
+> Reference: KopiCloud at https://github.com/KopiCloud/terraform-aws-debian-ec2-instance
 
-## Requeriments
+## Requirements
 
 - Docker
-- Localstack
-- Awscli
+- LocalStack
+- AWS CLI
 - Terraform
 
-## Configuration Localstack
+## LocalStack Configuration
 
-Start localstack
+Start LocalStack:
 
 ```sh
 docker run -dp 4566:4566 localstack/localstack
 ```
 
-First need configure your credencials for locastack to dont use the reals and have charges.
+First, configure your credentials for LocalStack to avoid using real credentials and incurring charges.
 
 ```sh
 aws configure --profile local
@@ -28,26 +28,26 @@ aws configure list-profiles
 
 > Complete with fake data.
 
-Use this local configuration (be carefull is only for terminal session)
+Use this local configuration (be careful, it only affects the current terminal session):
 
 ```sh
 export AWS_PROFILE=local
 aws configure list
 ```
 
-Add fake image of ec2 for localstack
+Add a fake EC2 image for LocalStack:
 
 ```sh
 aws --endpoint-url=http://localhost.localstack.cloud:4566 ec2 register-image \
     --name "debian-13-amd64-local-test" \
-    --description "Imagen Fake de Debian para LocalStack" \
+    --description "Fake Debian image for LocalStack" \
     --architecture x86_64 \
     --root-device-name "/dev/xvdb" \
     --virtualization-type hvm \
     --region us-east-1
 ```
 
-List images of ec2
+List EC2 images:
 
 ```sh
 aws --endpoint-url=http://localhost.localstack.cloud:4566 ec2 describe-images \
@@ -56,7 +56,7 @@ aws --endpoint-url=http://localhost.localstack.cloud:4566 ec2 describe-images \
     --query 'Images[*].{Name:Name, ID:ImageId, Owner:OwnerId, Virtualization:VirtualizationType}'
 ```
 
-Execute the terraform comands
+Execute the Terraform commands:
 
 ```sh
 cd environments/localstack
@@ -65,65 +65,64 @@ terraform plan -out=tfplan
 terraform apply tfplan
 ```
 
-To get all aws resources created - table view
+To view all created AWS resources (table view):
 
 ```sh
 # EC2 instances
 aws --endpoint-url=http://localhost.localstack.cloud:4566 ec2 describe-instances \
-    --region us-east-1\
+    --region us-east-1 \
     --query "Reservations[*].Instances[*].{ID:InstanceId,State:State.Name,PublicIP:PublicIpAddress,KeyName:KeyName}" \
     --output table
 
 # Security groups
 aws --endpoint-url=http://localhost.localstack.cloud:4566 ec2 describe-security-groups \
-    --region us-east-1\
+    --region us-east-1 \
     --query "SecurityGroups[*].{ID:GroupId,Name:GroupName,Description:Description}" \
     --output table
 
-# Elactic IP
+# Elastic IPs
 aws --endpoint-url=http://localhost.localstack.cloud:4566 ec2 describe-addresses \
-    --region us-east-1\
+    --region us-east-1 \
     --query "Addresses[*].{PublicIP:PublicIp,InstanceID:InstanceId,AllocID:AllocationId}" \
     --output table
 
-# Key-Pairs
+# Key Pairs
 aws --endpoint-url=http://localhost.localstack.cloud:4566 ec2 describe-key-pairs \
-    --region us-east-1\
+    --region us-east-1 \
     --query "KeyPairs[*].{Name:KeyName,Fingerprint:KeyFingerprint}" \
     --output table
 ```
 
-To destroy all
+To destroy all resources:
 
 ```sh
 terraform destroy --auto-approve
 ```
 
-## Levantar en AWS real
+## Deploy to real AWS
 
-First need ensurance the local profile
+First, ensure the local profile is active:
 
 ```sh
 aws configure list
 ```
 
-Configuramos el profile de produccion
+Configure the production profile:
 
 ```sh
 export AWS_PROFILE=production
 ```
 
-Execute the terraform comands
+Execute the Terraform commands:
 
 ```sh
-cd /environments/stage
+cd environments/stage
 ```
 
 ```sh
 terraform init
 terraform plan -out=ec2-setup.binary
 terraform apply ec2-setup.binary
-
 ```
 
 ```sh
@@ -131,17 +130,17 @@ chmod 400 "todoapp-stage-linux-us-east-1.pem"
 ssh -i "todoapp-stage-linux-us-east-1.pem" admin@<ec2-ip.compute-1.amazonaws.com>
 ```
 
-Test nginx
+Test nginx:
 
 ```sh
 curl localhost:81
 ```
 
-Entrar mediante http con un navegador
+Access via HTTP using a browser:
 
 http://54.237.34.108:81
 
-To destroy all
+To destroy all resources:
 
 ```sh
 terraform destroy --auto-approve
